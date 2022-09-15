@@ -1,0 +1,24 @@
+:root {
+  --text-color: #2c3e50;
+  --border-color: black;
+  --primary-color: #41b883;
+  --primary-hover-color: #2c7d59;
+  --white: white;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+  max-width: 128rem;
+  margin: 6rem auto;
+}
