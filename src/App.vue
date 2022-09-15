@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <select
-      v-model="locale"
+      v-model="$i18n.locale"
     >
       <option
         v-for="locale in locales"
@@ -12,15 +12,13 @@
       </option>
     </select>
 
-    <Cart :locale="locale" />
+    <Cart />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import Cart from '@/components/Cart.vue'
-
-const locale = ref('en');
 
 const locales = computed(() => {
   return ['en', 'pl'].map(locale => {

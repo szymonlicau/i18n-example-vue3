@@ -1,24 +1,15 @@
 <template>
   <div class="cart">
-    <h1>{{ locale === 'en' ? 'Your order' : 'Twoje zamówienie' }}</h1>
+    <h1>{{ $t('cart.title') }}</h1>
 
     <table class="cart__contents">
       <thead>
         <tr>
           <th> # </th>
-          <template v-if="locale === 'en'">
-            <th> Name </th>
-            <th> Each </th>
-            <th> Quantity </th>
-            <th> Total </th>
-          </template>
-
-          <template v-else>
-            <th> Nazwa </th>
-            <th> Cena </th>
-            <th> Ilość </th>
-            <th> Suma </th>
-          </template>
+          <th> {{ $t('cart.productName') }} </th>
+          <th> {{ $t('cart.productPrice') }} </th>
+          <th> {{ $t('cart.productQuantity') }} </th>
+          <th> {{ $t('cart.productTotal') }} </th>
         </tr>
       </thead>
 
@@ -30,11 +21,11 @@
           <td> {{ index + 1 }} </td>
           <td> {{ item.name }} </td>
           <td>
-            {{ formatPrice(item.price) }}
+            {{ $n(convertPrice(item.price), 'currency') }}
           </td>
           <td> {{ item.quantity }} </td>
           <td>
-            {{ formatPrice(item.quantity * item.price) }}
+            {{ $n(convertPrice(item.quantity * item.price), 'currency') }}
           </td>
         </tr>
 
@@ -43,11 +34,11 @@
           <td />
           <td />
           <td>
-            <b>{{ locale === 'en' ? 'Order Total:' : 'Suma zamówienia:' }}</b>
+            <b> {{ $t('cart.orderTotal') }} </b>
           </td>
 
           <td>
-            {{ formatPrice(totalCost) }}
+            {{ $n(convertPrice(totalCost), 'currency') }}
           </td>
         </tr>
       </tbody>
@@ -59,7 +50,7 @@
       <BaseButton
         variant="primary"
       >
-        {{ locale === 'en' ? 'Go to payment' : 'Przejdź do płatności' }}
+        {{ $t('cart.goToPayment') }}
       </BaseButton>
     </div>
   </div>
@@ -67,14 +58,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import BaseButton from '@/components/BaseButton.vue';
-
-const props = withDefaults(defineProps<{
-  locale: string;
-}>(), {
-  locale: 'en'
-});
 
 /**
  *  MOCKED 'API' DATA
@@ -101,6 +87,8 @@ const items = [
   }
 ];
 
+const i18n = useI18n();
+
 const arrivalDate = new Date(2022, 8, 6); // 06.09.2022
 /****/
 
@@ -111,24 +99,15 @@ const totalCost = computed(() => {
 });
 
 const arrivalEstimation = computed(() => {
-  const date = new Intl.DateTimeFormat(props.locale)
-    .format(arrivalDate);
+  const date = i18n.d(arrivalDate);
 
-  return props.locale === 'en'
-    ? `Your order will arrive at: <b>${date}</b>`
-    : `Twoje zamówienie dotrze: <b>${date}</b>`;
+  return i18n.t('cart.arrivalDate', { date });
 });
 
-
-const formatPrice = (price: number) => {
-  const convertedValue = props.locale === 'en'
+const convertPrice = (price: number) => {
+  return i18n.locale.value === 'en'
     ? price
     : price * dollarToPln;
-
-  return Intl.NumberFormat(props.locale, {
-    style: 'currency',
-    currency: props.locale === 'en' ? 'USD' : 'PLN'
-  }).format(convertedValue);
 };
 </script>
 
